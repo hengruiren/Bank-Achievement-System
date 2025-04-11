@@ -238,6 +238,54 @@ app.get('/data', authenticateAdmin, async (req, res) => {
     }
 });
 
+app.get('/branch_compare', authenticateAdmin, async (req, res) => {
+    const max_date = req.query.max_date;
+    const min_date = req.query.min_date;
+    console.log('get branch compare data');
+    try {
+        // const query = `SELECT position, title, SUM(score) AS score FROM Achievements GROUP BY position, title ORDER BY position, title`;
+        const query = `SELECT position, SUM(score) AS score FROM Achievements WHERE date BETWEEN '${min_date}' AND '${max_date}' GROUP BY position ORDER BY position`;
+        var [data, field] = await database.execute(query);
+        console.log('\tdata retrieved');
+        res.json({"result": "OK", "message": "Data retrieved", "data": data});
+    } catch (err) {
+        console.log('\tERR: ', err.message);
+        res.json({"result": "ERROR", "message": err.message});
+    }
+});
+
+app.get('/position_compare', authenticateAdmin, async (req, res) => {
+    const max_date = req.query.max_date;
+    const min_date = req.query.min_date;
+    console.log('get position compare data');
+    try {
+        // const query = `SELECT position, title, SUM(score) AS score FROM Achievements GROUP BY position, title ORDER BY position, title`;
+        const query = `SELECT title, SUM(score) AS score FROM Achievements WHERE date BETWEEN '${min_date}' AND '${max_date}' GROUP BY title ORDER BY title`;
+        var [data, field] = await database.execute(query);
+        console.log('\tdata retrieved');
+        res.json({"result": "OK", "message": "Data retrieved", "data": data});
+    } catch (err) {
+        console.log('\tERR: ', err.message);
+        res.json({"result": "ERROR", "message": err.message});
+    }
+});
+
+app.get('/branch_position_compare', authenticateAdmin, async (req, res) => {
+    const max_date = req.query.max_date;
+    const min_date = req.query.min_date;
+    console.log('get branch position compare data');
+    try {
+        // const query = `SELECT position, title, SUM(score) AS score FROM Achievements GROUP BY position, title ORDER BY position, title`;
+        const query = `SELECT position, title, SUM(score) AS score FROM Achievements WHERE date BETWEEN '${min_date}' AND '${max_date}' GROUP BY position, title ORDER BY position, title`;
+        var [data, field] = await database.execute(query);
+        console.log('\tdata retrieved');
+        res.json({"result": "OK", "message": "Data retrieved", "data": data});
+    } catch (err) {
+        console.log('\tERR: ', err.message);
+        res.json({"result": "ERROR", "message": err.message});
+    }
+});
+
 app.post('/data/check', authenticateToken, async (req, res) => {
     console.log('check data');
     try {
